@@ -5,7 +5,7 @@ from statistics import mean
 from collections import Counter
 import os
 
-#function for thresholding if needed
+
 def threshold(imgArray):
     balanceArr = []
     arr = imgArray
@@ -31,38 +31,18 @@ def threshold(imgArray):
     
     return arr
 
-#function for creating the database file (.txt)
-def createDataSheet():
-    #this is to create the dataSheet 
-    #once the dataSheet is created this function is not required any more
-    dataSheet = open(currentDir + "dataSheet.txt", "a")
-    actualNumbers = range(0,10) # 0 to 9
-    numberVersions = range(1,10) # 1 to 9
-
-    for number in actualNumbers:
-        for version in numberVersions:
-            fileName = currentDir + "images/numbers/" + str(number) + "." + str(version) + ".png"
-            #print(fileName)
-            currImg = Image.open(fileName)
-            currImgArr = np.array(currImg)
-            #getting the whole image array as a string of list to write in file
-            currImgArrList = str(currImgArr.tolist())
-            #wrtie in file
-            line = str(number) + "::" + currImgArrList + "\n"
-            dataSheet.write(line)
 
 
-#function for recognition
-#this is not that fancy. It just compares the pixel values of dataSheet and the given image
 def identifyNum(filePath):
     matchedArr = [] #a list for storing matches
-    file = open(currentDir + "dataSheet.txt", "r")
+    file = open(currentDir + "newDataSheet.txt", "r")
     data = file.read()
     data = data.split("\n")
 
     #getting the image array of the given image as a list
     givenImage = Image.open(filePath)
     imgArr = np.array(givenImage)
+    #imgArr = threshold(imgArr)
     imgArrList = imgArr.tolist()
     inQuestion = str(imgArrList)
 
@@ -88,8 +68,9 @@ def identifyNum(filePath):
 
     #print(matchedArr)
     matching = Counter(matchedArr)
-    #print(matching)
+    print(matching)
 
+    """
     #plot the image given and the results 
     graphX = []
     graphY = []
@@ -104,19 +85,32 @@ def identifyNum(filePath):
 
     plot1.imshow(imgArr)
     plot2.bar(graphX, graphY)
-    plt.ylim(400)
+    plt.ylim(500)
 
     xloc = plt.MaxNLocator(11)
     plot2.xaxis.set_major_locator(xloc)
 
     plt.show()
+    """
 
+#################################################
+#################################################
 
 currentDir = os.getcwd() + "/Digit_Recognition/"
-print(currentDir)
+#print(currentDir)
 #createDataSheet() #data sheet has been created so we don't need this any more
 
 #open the test.png image in the same directory
-testImagePath = currentDir + "/" + "test.png"
+testImagePath = currentDir + "/" + "6.png"
 identifyNum(testImagePath)
 
+"""
+testImagePath = currentDir + "/" + "img_7_60.png"
+identifyNum(testImagePath)
+testImagePath = currentDir + "/" + "img_7_110.png"
+identifyNum(testImagePath)
+testImagePath = currentDir + "/" + "img_7_154.png"
+identifyNum(testImagePath)
+testImagePath = currentDir + "/" + "img_7_225.png"
+identifyNum(testImagePath)
+"""
